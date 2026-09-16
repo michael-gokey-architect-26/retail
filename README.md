@@ -4,10 +4,14 @@
 
 ## 1. Mission Statement / End Goal
 
-**Mission:** Enable every retail product team to build, test, and ship customer-facing experiences independently — without waiting on a shared release train, without a single team owning a monolith no one fully understands, and without customers ever seeing the seams.
+**Mission:** Enable every retail product team to build, test, and ship customer-facing experiences independently, without waiting on a shared release train, without a single team owning a monolith no one fully understands, and without customers ever seeing the seams. This architecture decomposes a monolith type into smaller self-sufficient apps, using   using Micro-Frontends:
+- [Shell platform app](shell-build-prompt.md)
+-  [Catalog](catalog-build-prompt.md)
+-  [Checkout](checkout-build-prompt.md)
+-  [Account](account-build-prompt.md)
 
 **End state, 12 months out:**
-- The shell app owns identity, navigation, and design-system consistency — nothing else.
+- The shell app owns identity, navigation, and design-system consistency, nothing else.
 - Catalog, Checkout, and Account ship on their own schedules, multiple times a week if they want to, with zero coordination required from other teams for a routine release.
 - A production incident in one remote degrades gracefully (fallback UI) instead of taking down the whole site.
 - A new engineer can onboard onto *one* remote and be productive in days, not weeks, because they don't need to understand the entire platform to ship a change.
@@ -47,7 +51,7 @@
 
 ## 3. Team Objectives & Goals
 
-### Shell / Platform Team
+### [Shell Platform Team](shell-build-prompt.md)
 **Objective:** Own the composition layer — the thing that makes independent remotes feel like one product.
 - Build and own the host app: navigation, layout shell, auth session management.
 - Define and version the shared contract: design tokens, shared component library, auth token propagation, routing handoff between remotes.
@@ -55,21 +59,21 @@
 - Define fallback/error-boundary behavior when a remote fails to load.
 - Set and enforce the shared Angular version baseline all remotes build against.
 
-### Catalog Team
+### [Catalog Team](catalog-build-prompt.md)
 **Objective:** Own product browsing and search as an independently deployable remote.
 - Extract catalog/search/browse features from the monolith into their own remote app.
 - Expose only what the shell needs (routes, exposed modules) — no reaching into shell internals.
 - Consume the shared design system and auth token via the documented contract, not custom integration.
 - Own their own performance budget (bundle size, load time) independent of other remotes.
 
-### Checkout Team
+### [Checkout Team](checkout-build-prompt.md)
 **Objective:** Own cart and payment as an independently deployable remote, with the highest reliability bar on the platform.
 - Extract cart/payment flows into their own remote.
 - Define the cart-state contract with the shell (e.g., cart item count shown in shell nav) — decide whether this is event-based, shared signal, or polled, and document it.
 - Own PCI-relevant security review independently; this should not block or be blocked by Catalog/Account releases.
 - Define and test the fallback experience if Checkout fails to load (this is the remote that must never silently disappear).
 
-### Account Team
+### [Account Team](account-build-prompt.md)
 **Objective:** Own profile, auth-adjacent screens, and order history as an independently deployable remote.
 - Extract profile/order-history features into their own remote.
 - Coordinate (not merge) with the Shell team on session/auth token refresh behavior, since Account is the most auth-sensitive remote.
